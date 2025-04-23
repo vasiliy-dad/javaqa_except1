@@ -93,4 +93,40 @@ public class ShopRepositoryTest {
         Assertions.assertEquals(12000, product.getPrice());
     }
 
+    @Test
+    public void shouldProductAddWhenNotExist() {
+
+        ShopRepository repo = new ShopRepository();
+        Product product1 = new Product(1, "наушники", 3000);
+        Product product2 = new Product(2, "принтер", 12000);
+        Product product3 = new Product(3, "микрофон", 1200);
+
+        repo.add(product1);
+        repo.add(product2);
+        repo.add(product3);
+
+        Product[] actual = repo.findAll();
+        Product[] expected = {product1, product2, product3};
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldProductAddWhenExist() {
+
+        ShopRepository repo = new ShopRepository();
+        Product product1 = new Product(1, "наушники", 3000);
+        Product product2 = new Product(2, "принтер", 12000);
+        Product product3 = new Product(3, "микрофон", 1200);
+        Product product4 = new Product(3, "планшет", 4000);
+
+        repo.add(product1);
+        repo.add(product2);
+        repo.add(product3);
+
+        Assertions.assertThrows(
+                AlreadyExistsException.class,
+                () -> repo.add(product4)
+        );
+    }
 }
